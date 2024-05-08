@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    #image: mongo:4.4.29 # This is due to limitations in the Virtual Wall's hardware
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./mongo-data:/data/db
+    ports:
+      - 27017:27017
+    restart: always
+    networks:
+      - ldes
+  ldes-server:
+    build: ./ldes-server
+    ports:
+      - 3000:3000
+    command: -b http://localhost:3000/
+    networks:
+      - ldes
+    depends_on:
+      - mongodb
+
+networks:
+  ldes:
+    name: ldes-network

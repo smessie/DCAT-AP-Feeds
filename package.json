@@ -1,0 +1,17 @@
+{
+  "name": "dcat-ap-feeds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ieben Smessaert",
+  "license": "MIT",
+  "dependencies": {
+    "@ajuvercr/js-runner": "^0.2.0-alpha.1",
+    "@rdfc/http-utils-processor-ts": "^0.0.1-alpha.2",
+    "@treecg/sds-storage-writer-mongo": "^0.1.1",
+    "sds-processors": "^0.4.0-alpha.3"
+  }
+}

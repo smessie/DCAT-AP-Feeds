@@ -1,0 +1,7 @@
+.idea/
+dist/
+node_modules/
+state-of-*/
+feed.ttl
+report.ttl
+mongo-data/

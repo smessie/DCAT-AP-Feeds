@@ -1,0 +1,92 @@
+@prefix js: <https://w3id.org/conn/js#>.
+@prefix : <https://w3id.org/conn#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix tree: <https://w3id.org/tree#>.
+
+<> owl:imports <../node_modules/@ajuvercr/js-runner/ontology.ttl>.
+<> owl:imports <../node_modules/@ajuvercr/js-runner/channels/file.ttl>.
+<> owl:imports <../node_modules/@rdfc/http-utils-processor-ts/processors.ttl>.
+<> owl:imports <../node_modules/@rdfc/dumps-to-feeds/processor.ttl>.
+<> owl:imports <../node_modules/@treecg/sds-storage-writer-mongo/step.ttl>.
+<> owl:imports <../node_modules/sds-processors/configs/bucketizer.ttl>.
+
+<dump/writer> a js:JsWriterChannel.
+<dump/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <dump/reader>;
+    :writer <dump/writer>.
+
+<feed/writer> a js:JsWriterChannel.
+<feed/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <feed/reader>;
+    :writer <feed/writer>.
+
+<bucketized/writer> a js:JsWriterChannel.
+<bucketized/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <bucketized/reader>;
+    :writer <bucketized/writer>.
+
+<metadata/writer> a js:JsWriterChannel.
+<metadata/bucketized> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <metadata/bucketized>;
+    :writer <metadata/writer>.
+
+# File reader channel for metadata input on js:Ingest
+<metadata/reader> a :FileReaderChannel;
+                  :fileOnReplace true;
+                  :fileReadFirstContent true;
+                  :filePath <./metadata.ttl>.
+
+# Debugging purposes
+<feed/writer/file> a :FileWriterChannel;
+                   :fileOnReplace "false"^^xsd:boolean;
+                   :filePath <sweden.ttl>.
+
+
+[ ] a js:HttpFetch;
+    js:url "https://solid.smessie.com/private/tests/sweden/all.rdf";  # https://admin.dataportal.se/all.rdf
+    js:writer <dump/writer>.
+
+# Processor to persist the SDS stream into a MongoDB instance
+[ ] a js:Ingest;
+    js:dataInput <bucketized/reader>;
+    js:metadataInput <metadata/bucketized>;
+    js:database [
+          js:url <mongodb://root:password@localhost:27017/sweden?authSource=admin>;
+          js:metadata "METADATA";
+          js:data "DATA";
+          js:index "INDEX";
+      ];
+    js:pageSize 1000;
+    js:branchSize 4;
+    js:minBucketSpan 60.
+
+# Processor to bucketize the data
+[ ] a js:Bucketize;
+    js:channels [
+        js:dataInput <feed/reader>;
+        js:dataOutput <bucketized/writer>;
+        js:metadataInput <metadata/reader>;
+        js:metadataOutput <metadata/writer>;
+    ];
+    js:bucketizeStrategy ( [
+        a tree:PageFragmentation;
+        tree:pageSize 1000;
+    ]);
+    js:savePath <./buckets_save.json>;
+    js:outputStreamId <https://w3id.org/sds#Stream>.
+
+
+[ ] a js:DumpsToFeed;
+    js:output <feed/writer>;
+    js:feedname "sweden";
+    js:flush "true"^^xsd:boolean;
+    js:dump <dump/reader>;
+    js:dumpContentType "application/rdf+xml";
+    js:focusNodesStrategy "extract";
+    js:nodeShapeIri "https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape".
+
