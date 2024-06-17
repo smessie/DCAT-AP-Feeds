@@ -4,12 +4,12 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix tree: <https://w3id.org/tree#>.
 
-<> owl:imports <../node_modules/@ajuvercr/js-runner/ontology.ttl>.
-<> owl:imports <../node_modules/@ajuvercr/js-runner/channels/file.ttl>.
+<> owl:imports <../node_modules/@rdfc/js-runner/ontology.ttl>.
+<> owl:imports <../node_modules/@rdfc/js-runner/channels/file.ttl>.
 <> owl:imports <../node_modules/@rdfc/http-utils-processor-ts/processors.ttl>.
 <> owl:imports <../node_modules/@rdfc/dumps-to-feeds/processor.ttl>.
-<> owl:imports <../node_modules/@treecg/sds-storage-writer-mongo/step.ttl>.
-<> owl:imports <../node_modules/sds-processors/configs/bucketizer.ttl>.
+<> owl:imports <../node_modules/@rdfc/sds-storage-writer-ts/processor.ttl>.
+<> owl:imports <../node_modules/@rdfc/sds-processors-ts/configs/bucketizer.ttl>.
 
 <dump/writer> a js:JsWriterChannel.
 <dump/reader> a js:JsReaderChannel.
@@ -48,7 +48,7 @@
 
 
 [ ] a js:HttpFetch;
-    js:url "https://solid.smessie.com/private/tests/sweden/all.rdf";  # https://admin.dataportal.se/all.rdf
+    js:url "https://admin.dataportal.se/all.rdf";  # https://admin.dataportal.se/all.rdf
     js:writer <dump/writer>.
 
 # Processor to persist the SDS stream into a MongoDB instance
@@ -69,7 +69,7 @@
 [ ] a js:Bucketize;
     js:channels [
         js:dataInput <feed/reader>;
-        js:dataOutput <bucketized/writer>;
+        js:dataOutput <bucketized/writer>;  # Production: <bucketized/writer>; Debugging: <feed/writer/file>
         js:metadataInput <metadata/reader>;
         js:metadataOutput <metadata/writer>;
     ];
