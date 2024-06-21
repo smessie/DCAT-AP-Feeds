@@ -7,9 +7,11 @@
 <> owl:imports <../node_modules/@rdfc/js-runner/ontology.ttl>.
 <> owl:imports <../node_modules/@rdfc/js-runner/channels/file.ttl>.
 <> owl:imports <../node_modules/@rdfc/http-utils-processor-ts/processors.ttl>.
-<> owl:imports <../node_modules/@rdfc/dumps-to-feeds/processor.ttl>.
+<> owl:imports <../node_modules/@rdfc/file-utils-processors-ts/processors.ttl>.
+<> owl:imports <../node_modules/@rdfc/dumps-to-feed-processor-ts/processor.ttl>.
 <> owl:imports <../node_modules/@rdfc/sds-storage-writer-ts/processor.ttl>.
 <> owl:imports <../node_modules/@rdfc/sds-processors-ts/configs/bucketizer.ttl>.
+<> owl:imports <../node_modules/@rdfc/sds-processors-ts/configs/sdsify.ttl>.
 
 <dump/writer> a js:JsWriterChannel.
 <dump/reader> a js:JsReaderChannel.
@@ -23,6 +25,12 @@
     :reader <feed/reader>;
     :writer <feed/writer>.
 
+<sds/writer> a js:JsWriterChannel.
+<sds/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <sds/reader>;
+    :writer <sds/writer>.
+
 <bucketized/writer> a js:JsWriterChannel.
 <bucketized/reader> a js:JsReaderChannel.
 [ ] a js:JsChannel;
@@ -30,33 +38,37 @@
     :writer <bucketized/writer>.
 
 <metadata/writer> a js:JsWriterChannel.
-<metadata/bucketized> a js:JsReaderChannel.
+<metadata/reader> a js:JsReaderChannel.
 [ ] a js:JsChannel;
-    :reader <metadata/bucketized>;
+    :reader <metadata/reader>;
     :writer <metadata/writer>.
 
+<metadata/bucketized/writer> a js:JsWriterChannel.
+<metadata/bucketized/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <metadata/bucketized/reader>;
+    :writer <metadata/bucketized/writer>.
+
 # File reader channel for metadata input on js:Ingest
-<metadata/reader> a :FileReaderChannel;
-                  :fileOnReplace true;
-                  :fileReadFirstContent true;
-                  :filePath <./metadata.ttl>.
-
-# Debugging purposes
-<feed/writer/file> a :FileWriterChannel;
-                   :fileOnReplace "false"^^xsd:boolean;
-                   :filePath <sweden.ttl>.
-
+[ ] a js:GlobRead;
+    js:glob <./metadata.ttl>;
+    js:output <metadata/writer>;
+    js:closeOnEnd "true"^^xsd:boolean.
 
 [ ] a js:HttpFetch;
     js:url "https://admin.dataportal.se/all.rdf";  # https://admin.dataportal.se/all.rdf
-    js:writer <dump/writer>.
+    js:writer <dump/writer>;
+    js:options [
+                  js:cron "*/5 * * * *" ;
+                  js:closeOnEnd "false"^^xsd:boolean
+              ].
 
 # Processor to persist the SDS stream into a MongoDB instance
 [ ] a js:Ingest;
     js:dataInput <bucketized/reader>;
-    js:metadataInput <metadata/bucketized>;
+    js:metadataInput <metadata/bucketized/reader>;
     js:database [
-          js:url <mongodb://root:password@localhost:27017/sweden?authSource=admin>;
+          js:url <mongodb://root:password@mongodb:27017/sweden?authSource=admin>;
           js:metadata "METADATA";
           js:data "DATA";
           js:index "INDEX";
@@ -65,13 +77,40 @@
     js:branchSize 4;
     js:minBucketSpan 60.
 
+# Processor to wrap the data as individual SDS records
+[ ] a js:Sdsify;
+    js:input <feed/reader>;
+    js:output <sds/writer>;
+    js:stream <https://w3id.org/sds#Stream>;
+    js:shapeFilter """
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+        @prefix as: <https://www.w3.org/ns/activitystreams#> .
+
+        [ ] a sh:NodeShape ;
+            sh:targetClass as:Create.
+    """,
+    """
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+        @prefix as: <https://www.w3.org/ns/activitystreams#> .
+
+        [ ] a sh:NodeShape ;
+            sh:targetClass as:Update.
+    """,
+    """
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+        @prefix as: <https://www.w3.org/ns/activitystreams#> .
+
+        [ ] a sh:NodeShape ;
+            sh:targetClass as:Delete.
+    """.
+
 # Processor to bucketize the data
 [ ] a js:Bucketize;
     js:channels [
-        js:dataInput <feed/reader>;
-        js:dataOutput <bucketized/writer>;  # Production: <bucketized/writer>; Debugging: <feed/writer/file>
+        js:dataInput <sds/reader>;
+        js:dataOutput <bucketized/writer>;
         js:metadataInput <metadata/reader>;
-        js:metadataOutput <metadata/writer>;
+        js:metadataOutput <metadata/bucketized/writer>;
     ];
     js:bucketizeStrategy ( [
         a tree:PageFragmentation;
@@ -84,7 +123,7 @@
 [ ] a js:DumpsToFeed;
     js:output <feed/writer>;
     js:feedname "sweden";
-    js:flush "true"^^xsd:boolean;
+    js:flush "false"^^xsd:boolean;
     js:dump <dump/reader>;
     js:dumpContentType "application/rdf+xml";
     js:focusNodesStrategy "extract";

@@ -8,8 +8,9 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - ./mongo-data:/data/db
-    ports:
-      - 27017:27017
+    # Don't expose the port to the outside world when running publicly
+    #ports:
+    #  - 27017:27017
     restart: always
     networks:
       - ldes
@@ -17,7 +18,17 @@ services:
     build: ./ldes-server
     ports:
       - 3000:3000
+    restart: always
     command: -b http://localhost:3000/
+    networks:
+      - ldes
+    depends_on:
+      - mongodb
+  sweden-feed-pipeline:
+    container_name: sweden-feed-pipeline
+    build:
+      context: .
+      dockerfile: ./sweden/Dockerfile-feed
     networks:
       - ldes
     depends_on:

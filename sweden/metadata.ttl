@@ -17,8 +17,9 @@ ex:somePlan
 <https://w3id.org/sds#Stream>
     a                     sds:Stream ;
     p-plan:wasGeneratedBy [ a            p-plan:Activity ;
-                            rdfs:comment "Load in RINF data" ] ;
+                            rdfs:comment "Load in Sweden's DCAT-AP data" ] ;
     sds:carries           [ a sds:Member ] ;
+    sds:shape             <https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape> ;
     sds:dataset           [ a                  dcat:Dataset ;
                             dcat:title         "DCAT-AP Feed of Sweden" ;
                             dcat:publisher     <http://solid.smessie.com/profile/card#me> ;

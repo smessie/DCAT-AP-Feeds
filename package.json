@@ -10,10 +10,14 @@
   "author": "Ieben Smessaert",
   "license": "MIT",
   "dependencies": {
-    "@rdfc/js-runner": "^0.2.1",
+    "@rdfc/dumps-to-feed-processor-ts": "^1.0.0",
+    "@rdfc/file-utils-processors-ts": "^0.5.4",
     "@rdfc/http-utils-processor-ts": "^0.0.2",
+    "@rdfc/js-runner": "^0.2.1",
+    "@rdfc/sds-processors-ts": "^0.4.0",
     "@rdfc/sds-storage-writer-ts": "^0.2.7",
-    "rdf-dereference": "^2.2.0",
-    "@rdfc/sds-processors-ts": "^0.4.0"
+    "@rdfc/shacl-processor-ts": "^0.1.2",
+    "ldes-client": "^0.0.10-alpha.6",
+    "rdf-dereference": "^2.2.0"
   }
 }
