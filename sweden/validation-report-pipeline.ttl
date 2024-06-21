@@ -1,0 +1,130 @@
+@prefix js: <https://w3id.org/conn/js#>.
+@prefix : <https://w3id.org/conn#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix tree: <https://w3id.org/tree#>.
+
+<> owl:imports <../node_modules/@rdfc/js-runner/ontology.ttl>.
+<> owl:imports <../node_modules/@rdfc/js-runner/channels/file.ttl>.
+<> owl:imports <../node_modules/@rdfc/http-utils-processor-ts/processors.ttl>.
+<> owl:imports <../node_modules/@rdfc/file-utils-processors-ts/processors.ttl>.
+<> owl:imports <../node_modules/@rdfc/sds-storage-writer-ts/processor.ttl>.
+<> owl:imports <../node_modules/@rdfc/sds-processors-ts/configs/bucketizer.ttl>.
+<> owl:imports <../node_modules/@rdfc/sds-processors-ts/configs/sdsify.ttl>.
+<> owl:imports <../node_modules/ldes-client/processor.ttl>.
+<> owl:imports <../node_modules/@rdfc/shacl-processor-ts/processors.ttl>.
+
+<feed/writer> a js:JsWriterChannel.
+<feed/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <feed/reader>;
+    :writer <feed/writer>.
+
+<validated/writer> a js:JsWriterChannel.
+<validated/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <validated/reader>;
+    :writer <validated/writer>.
+
+<report/writer> a js:JsWriterChannel.
+<report/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <report/reader>;
+    :writer <report/writer>.
+
+<sds/writer> a js:JsWriterChannel.
+<sds/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <sds/reader>;
+    :writer <sds/writer>.
+
+<bucketized/writer> a js:JsWriterChannel.
+<bucketized/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <bucketized/reader>;
+    :writer <bucketized/writer>.
+
+<metadata/writer> a js:JsWriterChannel.
+<metadata/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <metadata/reader>;
+    :writer <metadata/writer>.
+
+<metadata/bucketized/writer> a js:JsWriterChannel.
+<metadata/bucketized/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <metadata/bucketized/reader>;
+    :writer <metadata/bucketized/writer>.
+
+# File reader channel for metadata input on js:Ingest
+[ ] a js:GlobRead;
+    js:glob <./metadata-validation-report.ttl>;
+    js:output <metadata/writer>;
+    js:closeOnEnd "true"^^xsd:boolean.
+
+
+[ ] a js:LdesClient;
+    js:output <feed/writer>;
+    js:url <http://ldes-server:3000/sweden>;  # ldes-server or localhost
+    js:ordered "none";
+    js:follow "true"^^xsd:boolean;
+    js:interval 5000;
+    js:shapeFile <https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape>;
+    js:noShape "false"^^xsd:boolean;
+    js:loose "false"^^xsd:boolean;
+    js:urlIsView "false"^^xsd:boolean;
+    js:verbose "true"^^xsd:boolean;
+    js:fetch [
+                 js:safe "true"^^xsd:boolean;
+             ].
+
+[ ] a js:Validate;
+    js:args [
+        js:shaclPath "https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape";
+        js:incoming <feed/reader>;
+        js:outgoing <validated/writer>;
+        js:report <report/writer>;  # <report/writer>
+        js:validationIsFatal "false"^^xsd:boolean;
+        js:mime "application/trig"
+    ].
+
+# Processor to wrap the data as individual SDS records
+[ ] a js:Sdsify;
+    js:input <report/reader>;
+    js:output <sds/writer>;
+    js:stream <https://w3id.org/sds#Stream>;
+    js:shapeFilter """
+        @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+        [ ] a sh:NodeShape ;
+            sh:targetClass sh:ValidationReport.
+    """.
+
+# Processor to bucketize the data
+[ ] a js:Bucketize;
+    js:channels [
+          js:dataInput <sds/reader>;
+          js:dataOutput <bucketized/writer>;
+          js:metadataInput <metadata/reader>;
+          js:metadataOutput <metadata/bucketized/writer>;
+      ];
+    js:bucketizeStrategy ( [
+                               a tree:PageFragmentation;
+                               tree:pageSize 1000;
+                           ]);
+    js:savePath <./buckets_save_validation_report.json>;
+    js:outputStreamId <https://w3id.org/sds#Stream>.
+
+# Processor to persist the SDS stream into a MongoDB instance
+[ ] a js:Ingest;
+    js:dataInput <bucketized/reader>;
+    js:metadataInput <metadata/bucketized/reader>;
+    js:database [
+          js:url <mongodb://root:password@mongodb:27017/sweden-validation-report?authSource=admin>;  # mongodb or localhost
+          js:metadata "METADATA";
+          js:data "DATA";
+          js:index "INDEX";
+      ];
+    js:pageSize 1000;
+    js:branchSize 4;
+    js:minBucketSpan 60.

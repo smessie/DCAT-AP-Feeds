@@ -33,6 +33,16 @@ services:
       - ldes
     depends_on:
       - mongodb
+  sweden-validation-pipeline:
+    container_name: sweden-validation-pipeline
+    build:
+      context: .
+      dockerfile: ./sweden/Dockerfile-validation
+    networks:
+      - ldes
+    depends_on:
+      - mongodb
+      - ldes-server
 
 networks:
   ldes:

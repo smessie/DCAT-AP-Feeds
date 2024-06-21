@@ -58,6 +58,43 @@
           "store": {
             "@id": "urn:solid-server:default:MemoryResourceStore"
           }
+        },{
+          "@type": "RegexRule",
+          "regex": {
+            "@id": "urn:solid-server:default:relative-path-sweden-validation"
+          },
+          "store": {
+            "comment": "Basic LDES route for Sweden Validation Report",
+            "@type": "RepresentationConvertingStore",
+            "source": {
+              "@type": "LDESStore",
+              "id": "http://localhost:3000/sweden-validation-report",
+              "base": {
+                "@id": "urn:solid-server:default:variable:baseUrl"
+              },
+              "relativePath": {
+                "@id": "urn:solid-server:default:relative-path-sweden-validation"
+              },
+              "freshDuration": 30,
+              "views": [
+                {
+                  "@type": "PrefixView",
+                  "prefix": "default",
+                  "view": {
+                    "@type": "MongoSDSView",
+                    "descriptionId": "http://localhost:3000/sweden-validation-report/#timestampFragmentation",
+                    "streamId": "https://w3id.org/sds#Stream",
+                    "db": {
+                      "@id": "urn:solid-server:default:DBConfigSwedenValidation"
+                    }
+                  }
+                }
+              ]
+            },
+            "options_outConverter": {
+              "@id": "urn:solid-server:default:RepresentationConverter"
+            }
+          }
         },
         {
           "@type": "RegexRule",
@@ -125,8 +162,20 @@
       "dbUrl": "mongodb://root:password@mongodb:27017/sweden?authSource=admin"
     },
     {
+      "@id": "urn:solid-server:default:DBConfigSwedenValidation",
+      "@type": "DBConfig",
+      "metaCollection": "METADATA",
+      "indexCollection": "INDEX",
+      "membersCollection": "DATA",
+      "dbUrl": "mongodb://root:password@mongodb:27017/sweden-validation-report?authSource=admin"
+    },
+    {
       "@id": "urn:solid-server:default:relative-path-sweden",
       "valueRaw": "/sweden"
+    },
+    {
+      "@id": "urn:solid-server:default:relative-path-sweden-validation",
+      "valueRaw": "/sweden-validation-report"
     }
   ]
 }
