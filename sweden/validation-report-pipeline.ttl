@@ -65,7 +65,7 @@
 
 [ ] a js:LdesClient;
     js:output <feed/writer>;
-    js:url <http://ldes-server:3000/sweden>;  # ldes-server or localhost
+    js:url <https://semic.ilabt.imec.be/sweden>;  # ldes-server or localhost
     js:ordered "none";
     js:follow "true"^^xsd:boolean;
     js:interval 5000;
