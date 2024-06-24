@@ -24,4 +24,4 @@ ex:somePlan
                             dcat:title         "Validation report of Sweden's LDES feed" ;
                             dcat:publisher     <http://solid.smessie.com/profile/card#me> ;
                             ldes:timestampPath <https://www.w3.org/ns/activitystreams#published> ;
-                            dcat:identifier    <http://localhost:3000/sweden-validation-report> ] .
+                            dcat:identifier    <http://semic.ilabt.imec.be/sweden-validation-report> ] .

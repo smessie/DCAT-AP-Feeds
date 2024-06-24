@@ -19,7 +19,7 @@ services:
     ports:
       - 3000:3000
     restart: always
-    command: -b http://semic.ilabt.imec.be:3000
+    command: -b http://semic.ilabt.imec.be
     networks:
       - ldes
     depends_on:

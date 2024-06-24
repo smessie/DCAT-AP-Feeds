@@ -24,4 +24,4 @@ ex:somePlan
                             dcat:title         "DCAT-AP Feed of Sweden" ;
                             dcat:publisher     <http://solid.smessie.com/profile/card#me> ;
                             ldes:timestampPath <https://www.w3.org/ns/activitystreams#published> ;
-                            dcat:identifier    <http://localhost:3000/sweden> ] .
+                            dcat:identifier    <http://semic.ilabt.imec.be/sweden> ] .
