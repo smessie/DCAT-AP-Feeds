@@ -1,8 +1,8 @@
 services:
   mongodb:
     container_name: mongodb
-    image: mongo:latest
-    #image: mongo:4.4.29 # This is due to limitations in the Virtual Wall's hardware
+    #image: mongo:latest
+    image: mongo:4.4.29 # This is due to limitations in the Virtual Wall's hardware
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
