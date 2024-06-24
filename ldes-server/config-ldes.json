@@ -68,7 +68,7 @@
             "@type": "RepresentationConvertingStore",
             "source": {
               "@type": "LDESStore",
-              "id": "https://semic.ilabt.imec.be/sweden-validation-report",
+              "id": "http://semic.ilabt.imec.be:3000/sweden-validation-report",
               "base": {
                 "@id": "urn:solid-server:default:variable:baseUrl"
               },
@@ -82,7 +82,7 @@
                   "prefix": "default",
                   "view": {
                     "@type": "MongoSDSView",
-                    "descriptionId": "https://semic.ilabt.imec.be/sweden-validation-report/#timestampFragmentation",
+                    "descriptionId": "http://semic.ilabt.imec.be:3000/sweden-validation-report/#timestampFragmentation",
                     "streamId": "https://w3id.org/sds#Stream",
                     "db": {
                       "@id": "urn:solid-server:default:DBConfigSwedenValidation"
@@ -106,7 +106,7 @@
             "@type": "RepresentationConvertingStore",
             "source": {
               "@type": "LDESStore",
-              "id": "https://semic.ilabt.imec.be/sweden",
+              "id": "http://semic.ilabt.imec.be:3000/sweden",
               "base": {
                 "@id": "urn:solid-server:default:variable:baseUrl"
               },
@@ -120,7 +120,7 @@
                   "prefix": "default",
                   "view": {
                     "@type": "MongoSDSView",
-                    "descriptionId": "https://semic.ilabt.imec.be/sweden/#timestampFragmentation",
+                    "descriptionId": "http://semic.ilabt.imec.be:3000/sweden/#timestampFragmentation",
                     "streamId": "https://w3id.org/sds#Stream",
                     "db": {
                       "@id": "urn:solid-server:default:DBConfigSweden"
