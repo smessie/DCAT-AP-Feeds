@@ -38,6 +38,8 @@ services:
     build:
       context: .
       dockerfile: ./sweden/Dockerfile-validation
+    volumes:
+      - ./leveldb:/opt/pipeline/leveldb
     networks:
       - ldes
     depends_on:

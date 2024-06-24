@@ -128,5 +128,6 @@
     js:dump <dump/reader>;
     js:dumpContentType "application/rdf+xml";
     js:focusNodesStrategy "extract";
-    js:nodeShapeIri "https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape".
+    js:nodeShapeIri "https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape";
+    js:dbDir "/opt/pipeline/leveldb/".
 
