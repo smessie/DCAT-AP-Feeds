@@ -58,9 +58,10 @@
 [ ] a js:HttpFetch;
     js:url "https://admin.dataportal.se/all.rdf";  # https://admin.dataportal.se/all.rdf
     js:writer <dump/writer>;
-    js:options [
+    js:HttpFetchOptions [
                   js:cron "*/5 * * * *" ;
-                  js:closeOnEnd "false"^^xsd:boolean
+                  js:closeOnEnd "false"^^xsd:boolean ;
+                  js:timeOutMilliseconds 60000
               ].
 
 # Processor to persist the SDS stream into a MongoDB instance
