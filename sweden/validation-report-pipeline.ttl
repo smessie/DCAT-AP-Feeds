@@ -3,6 +3,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix tree: <https://w3id.org/tree#>.
+@prefix sh: <http://www.w3.org/ns/shacl#>.
 
 <> owl:imports <../node_modules/@rdfc/js-runner/ontology.ttl>.
 <> owl:imports <../node_modules/@rdfc/js-runner/channels/file.ttl>.
@@ -13,6 +14,7 @@
 <> owl:imports <../node_modules/@rdfc/sds-processors-ts/configs/sdsify.ttl>.
 <> owl:imports <../node_modules/ldes-client/processor.ttl>.
 <> owl:imports <../node_modules/@rdfc/shacl-processor-ts/processors.ttl>.
+<> owl:imports <../node_modules/@rdfc/blank-to-named-node-identifiers-processor-ts/processor.ttl>.
 
 <feed/writer> a js:JsWriterChannel.
 <feed/reader> a js:JsReaderChannel.
@@ -31,6 +33,12 @@
 [ ] a js:JsChannel;
     :reader <report/reader>;
     :writer <report/writer>.
+
+<bn2nn/writer> a js:JsWriterChannel.
+<bn2nn/reader> a js:JsReaderChannel.
+[ ] a js:JsChannel;
+    :reader <bn2nn/reader>;
+    :writer <bn2nn/writer>.
 
 <sds/writer> a js:JsWriterChannel.
 <sds/reader> a js:JsReaderChannel.
@@ -88,16 +96,31 @@
         js:mime "application/trig"
     ].
 
+[ ] a js:BlankToNamedNodeIdentifiers;
+    js:incoming <report/reader>;
+    js:outgoing <bn2nn/writer>;
+    js:mime "application/trig".
+
 # Processor to wrap the data as individual SDS records
 [ ] a js:Sdsify;
-    js:input <report/reader>;
+    js:input <bn2nn/reader>;
     js:output <sds/writer>;
     js:stream <https://w3id.org/sds#Stream>;
-    js:shapeFilter """
+    js:shape """
         @prefix sh: <http://www.w3.org/ns/shacl#> .
 
         [ ] a sh:NodeShape ;
-            sh:targetClass sh:ValidationReport.
+            sh:targetClass sh:ValidationReport;
+            sh:property [
+                sh:path sh:conforms ;
+            ];
+            sh:property [
+                sh:path sh:result ;
+                sh:class sh:ValidationResult ;
+                sh:property [
+                    sh:path sh:focusNode ;
+                ];
+            ].
     """.
 
 # Processor to bucketize the data

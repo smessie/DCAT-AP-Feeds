@@ -1,3 +1,3 @@
-const {jsRunner} = require('@ajuvercr/js-runner');
+import {jsRunner} from '@rdfc/js-runner';
 
 jsRunner();
