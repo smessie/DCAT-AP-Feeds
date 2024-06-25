@@ -106,6 +106,7 @@
     js:input <bn2nn/reader>;
     js:output <sds/writer>;
     js:stream <https://w3id.org/sds#Stream>;
+    js:typeFilter sh:ValidationReport;
     js:shape """
         @prefix sh: <http://www.w3.org/ns/shacl#> .
 
@@ -116,10 +117,10 @@
             ];
             sh:property [
                 sh:path sh:result ;
-                sh:class sh:ValidationResult ;
-                sh:property [
-                    sh:path sh:focusNode ;
-                ];
+                sh:node [
+                    a sh:NodeShape;
+                    sh:targetClass sh:ValidationResult
+                ]
             ].
     """.
 
