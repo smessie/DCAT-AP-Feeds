@@ -77,6 +77,7 @@
     js:ordered "none";
     js:follow "true"^^xsd:boolean;
     js:interval 5000;
+    js:savePath </opt/pipeline/validation-state/ldes-client_state.json>;
     js:shapeFile <https://semiceu.github.io/LDES-DCAT-AP-feeds/shape.ttl#ActivityShape>;
     js:noShape "false"^^xsd:boolean;
     js:loose "false"^^xsd:boolean;
@@ -134,9 +135,9 @@
       ];
     js:bucketizeStrategy ( [
                                a tree:PageFragmentation;
-                               tree:pageSize 1000;
+                               tree:pageSize 100;
                            ]);
-    js:savePath <./buckets_save_validation_report.json>;
+    js:savePath </opt/pipeline/validation-state/buckets_save_validation_report.json>;
     js:outputStreamId <https://w3id.org/sds#Stream>.
 
 # Processor to persist the SDS stream into a MongoDB instance
@@ -148,7 +149,4 @@
           js:metadata "METADATA";
           js:data "DATA";
           js:index "INDEX";
-      ];
-    js:pageSize 1000;
-    js:branchSize 4;
-    js:minBucketSpan 60.
+    ].

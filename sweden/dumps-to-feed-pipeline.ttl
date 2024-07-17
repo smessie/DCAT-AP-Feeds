@@ -60,7 +60,7 @@
     js:url "https://admin.dataportal.se/all.rdf";  # https://admin.dataportal.se/all.rdf
     js:writer <dump/writer>;
     js:HttpFetchOptions [
-                  js:cron "*/5 * * * *" ;
+                  js:cron "0 * * * *" ;
                   js:closeOnEnd "false"^^xsd:boolean ;
                   js:timeOutMilliseconds 60000
               ].
@@ -74,10 +74,7 @@
           js:metadata "METADATA";
           js:data "DATA";
           js:index "INDEX";
-      ];
-    js:pageSize 1000;
-    js:branchSize 4;
-    js:minBucketSpan 60.
+    ].
 
 # Processor to wrap the data as individual SDS records
 [ ] a js:Sdsify;
@@ -116,10 +113,13 @@
         js:metadataOutput <metadata/bucketized/writer>;
     ];
     js:bucketizeStrategy ( [
-        a tree:PageFragmentation;
-        tree:pageSize 1000;
-    ]);
-    js:savePath <./buckets_save.json>;
+                               a tree:TimebasedFragmentation;
+                               tree:timestampPath <https://www.w3.org/ns/activitystreams#published>;
+                               tree:maxSize 100;
+                               tree:k 4;
+                               tree:minBucketSpan 3600;
+                           ]);
+    js:savePath </opt/pipeline/feed-state/buckets_save.json>;
     js:outputStreamId <https://w3id.org/sds#Stream>.
 
 
