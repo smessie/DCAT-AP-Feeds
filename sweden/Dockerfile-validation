@@ -1,12 +1,12 @@
-# Start from a Bun ready container
-FROM oven/bun:latest
+# Start from a Node container
+FROM node:lts-alpine
 
 # Setup working folder
 WORKDIR /opt/pipeline
 COPY . .
 
 # Install dependencies
-RUN bun install
+RUN npm install
 
 # Container's entrypoint command
-ENTRYPOINT [ "bunx", "--bun", "js-runner", "sweden/validation-report-pipeline.ttl" ]
+ENTRYPOINT [ "npx", "js-runner", "sweden/validation-report-pipeline.ttl" ]

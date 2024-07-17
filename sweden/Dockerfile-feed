@@ -1,4 +1,4 @@
-# Start from a Bun ready container
+# Start from a Node container
 FROM node:lts-alpine
 
 # Setup working folder
