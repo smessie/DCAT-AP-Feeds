@@ -16,7 +16,7 @@
     "@rdfc/http-utils-processor-ts": "^0.0.2",
     "@rdfc/js-runner": "^0.2.1",
     "@rdfc/sds-processors-ts": "^0.6.0-alpha.2",
-    "@rdfc/sds-storage-writer-ts": "^0.3.0-alpha.2",
+    "@rdfc/sds-storage-writer-ts": "^0.3.0-alpha.3",
     "@rdfc/shacl-processor-ts": "^0.1.2",
     "ldes-client": "^0.0.10-alpha.8",
     "rdf-dereference": "^2.2.0"

@@ -29,8 +29,6 @@ services:
     build:
       context: .
       dockerfile: ./sweden/Dockerfile-feed
-    environment:
-      - NODE_OPTIONS=--max-old-space-size=12228
     volumes:
       - ./leveldb:/opt/pipeline/leveldb
       - ./feed-state:/opt/pipeline/feed-state
