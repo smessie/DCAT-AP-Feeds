@@ -25,6 +25,12 @@ services:
       - 80:3000
     restart: always
     command: -b http://semic.ilabt.imec.be
+    healthcheck:
+      test: wget --spider -q http://semic.ilabt.imec.be/sweden/default || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     logging:
       driver: "json-file"
       options:
@@ -70,8 +76,10 @@ services:
     networks:
       - ldes
     depends_on:
-      - mongodb
-      - ldes-server
+      ldes-server:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
 
 networks:
   ldes:
