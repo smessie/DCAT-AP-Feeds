@@ -39,6 +39,8 @@ services:
     build:
       context: .
       dockerfile: ./sweden/Dockerfile-feed
+    environment:
+      - DEBUG=*
     volumes:
       - ./leveldb:/opt/pipeline/leveldb
       - ./feed-state:/opt/pipeline/feed-state
@@ -56,6 +58,8 @@ services:
     build:
       context: .
       dockerfile: ./sweden/Dockerfile-validation
+    environment:
+      - DEBUG=*
     volumes:
       - ./validation-state:/opt/pipeline/validation-state
     logging:
