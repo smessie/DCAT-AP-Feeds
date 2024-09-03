@@ -14,11 +14,11 @@
     "@rdfc/dumps-to-feed-processor-ts": "^1.0.4",
     "@rdfc/file-utils-processors-ts": "^0.5.4",
     "@rdfc/http-utils-processor-ts": "^0.0.2",
-    "@rdfc/js-runner": "^0.2.1",
-    "@rdfc/sds-processors-ts": "^0.6.0-alpha.3",
-    "@rdfc/sds-storage-writer-ts": "^0.3.0-alpha.4",
+    "@rdfc/js-runner": "^1.0.0-alpha.0",
+    "@rdfc/sds-processors-ts": "^1.0.0-alpha.1",
+    "@rdfc/sds-storage-writer-ts": "^1.0.0-alpha.1",
     "@rdfc/shacl-processor-ts": "^0.1.2",
-    "ldes-client": "^0.0.10-alpha.8",
+    "ldes-client": "^0.0.10-alpha.9",
     "rdf-dereference": "^2.2.0"
   }
 }
