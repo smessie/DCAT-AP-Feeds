@@ -13,7 +13,7 @@
     "@rdfc/blank-to-named-node-identifiers-processor-ts": "^1.0.1",
     "@rdfc/dumps-to-feed-processor-ts": "^1.0.4",
     "@rdfc/file-utils-processors-ts": "^0.5.4",
-    "@rdfc/http-utils-processor-ts": "^0.0.2",
+    "@rdfc/http-utils-processor-ts": "^0.0.3",
     "@rdfc/js-runner": "^1.0.0-alpha.0",
     "@rdfc/sds-processors-ts": "^1.0.0-alpha.1",
     "@rdfc/sds-storage-writer-ts": "^1.0.0-alpha.1",

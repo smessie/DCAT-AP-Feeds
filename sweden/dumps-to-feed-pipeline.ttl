@@ -59,9 +59,10 @@
 [ ] a js:HttpFetch;
     js:url "https://admin.dataportal.se/all.rdf";  # https://admin.dataportal.se/all.rdf
     js:writer <dump/writer>;
-    js:HttpFetchOptions [
+    js:options [
                   js:cron "0 * * * *" ;
                   js:closeOnEnd "false"^^xsd:boolean ;
+                  js:runOnInit "true"^^xsd:boolean ;
                   js:timeOutMilliseconds 60000
               ].
 
