@@ -9,4 +9,4 @@ COPY . .
 RUN npm install
 
 # Container's entrypoint command
-ENTRYPOINT [ "npx", "js-runner", "sweden/validation-report-pipeline.ttl" ]
+ENTRYPOINT [ "npx", "js-runner", "validation-report-pipeline.ttl" ]

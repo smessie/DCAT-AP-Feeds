@@ -43,8 +43,8 @@ services:
   sweden-feed-pipeline:
     container_name: sweden-feed-pipeline
     build:
-      context: .
-      dockerfile: ./sweden/Dockerfile-feed
+      context: ./sweden
+      dockerfile: ./Dockerfile-feed
     environment:
       - DEBUG=*
     volumes:
@@ -62,8 +62,8 @@ services:
   sweden-validation-pipeline:
     container_name: sweden-validation-pipeline
     build:
-      context: .
-      dockerfile: ./sweden/Dockerfile-validation
+      context: ./sweden
+      dockerfile: ./Dockerfile-validation
     environment:
       - DEBUG=*
     volumes:

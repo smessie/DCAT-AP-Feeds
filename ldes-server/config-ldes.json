@@ -81,7 +81,7 @@
                   "@type": "PrefixView",
                   "prefix": "default",
                   "view": {
-                    "@type": "MongoSDSView",
+                    "@type": "SDSView",
                     "descriptionId": "http://semic.ilabt.imec.be/sweden-validation-report/#timestampFragmentation",
                     "streamId": "https://w3id.org/sds#Stream",
                     "db": {
@@ -119,7 +119,7 @@
                   "@type": "PrefixView",
                   "prefix": "default",
                   "view": {
-                    "@type": "MongoSDSView",
+                    "@type": "SDSView",
                     "descriptionId": "http://semic.ilabt.imec.be/sweden/#timestampFragmentation",
                     "streamId": "https://w3id.org/sds#Stream",
                     "db": {
